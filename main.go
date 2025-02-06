@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/base64"
 	"flag"
 	"fmt"
 	"io/ioutil"
@@ -90,21 +91,29 @@ func genKey(typ *string, size *int) error {
 		return err
 	}
 
+	// Получаем Peer ID из публичного ключа
 	pid, err := peer.IDFromPublicKey(pub)
 	if err != nil {
 		return err
 	}
 
-	data, err := crp.MarshalPrivateKey(priv)
+	// Кодируем приватный ключ
+	privData, err := crp.MarshalPrivateKey(priv)
 	if err != nil {
 		return err
 	}
 
-	_, err = os.Stdout.Write(data)
+	// Кодируем публичный ключ
+	pubData, err := crp.MarshalPublicKey(pub)
 	if err != nil {
-		return nil
+		return err
 	}
 
+	// Выводим оба ключа в stdout
+	fmt.Println("Private Key:", base64.StdEncoding.EncodeToString(privData))
+	fmt.Println("PID:", pid.Pretty())
+
+	// Выводим Peer ID в stderr
 	_, err = fmt.Fprintf(os.Stderr, "Success!\nID for generated key: %s\n", pid.Pretty())
 	return err
 }
