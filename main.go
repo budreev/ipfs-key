@@ -112,6 +112,7 @@ func genKey(typ *string, size *int) error {
 	// Выводим оба ключа в stdout
 	fmt.Println("Private Key:", base64.StdEncoding.EncodeToString(privData))
 	fmt.Println("PID:", pid.Pretty())
+	fmt.Println("Public Key:", base64.StdEncoding.EncodeToString(pubData))
 
 	// Выводим Peer ID в stderr
 	_, err = fmt.Fprintf(os.Stderr, "Success!\nID for generated key: %s\n", pid.Pretty())
